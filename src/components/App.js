@@ -1,95 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState} from "react";
+
+import '../styles/App.css';
 
 function App() {
-  const [name1, setName1] = useState('');
-  const [name2, setName2] = useState('');
-  const [relationship, setRelationship] = useState('');
+  let [ans,setAns]=useState("")
+  let [firstName,setFirstName]=useState("")
+  let [secondName,setSecondName]=useState("")
+    // console.log(firstName)
+    // console.log(secondName)
 
-  const calculateRelationship = () => {
-    const commonLetters = getCommonLetters(name1, name2);
-    const remainingLength = (name1.length + name2.length - 2 * commonLetters.length) % 6;
+function helperFun(){
+    if(firstName.length==0 || secondName.length==0){
+        setAns("Please Enter valid input")
+    }else{
+        let str1=firstName
+        let str2=secondName
+        for (let i = 0; i < str1.length; i++) {
+            for (let j = 0; j < str2.length; j++) {
+                if(str1.charAt(i) == str2.charAt(j)){
+                   str1= str1.replace(str1.charAt(i), "")
+                   str2= str2.replace(str2.charAt(j), "")
+                    i--
+                }
+            }
+            
+        }
+        if(((str1.length+str2.length))%6 == 1){
+            setAns("Friends")
+        }else if((str1.length+str2.length)%6 == 2){
+            setAns("Love")
 
-    switch (remainingLength) {
-      case 1:
-        setRelationship('Friends');
-        break;
-      case 2:
-        setRelationship('Love');
-        break;
-      case 3:
-        setRelationship('Affection');
-        break;
-      case 4:
-        setRelationship('Marriage');
-        break;
-      case 5:
-        setRelationship('Enemy');
-        break;
-      case 0:
-        setRelationship('Siblings');
-        break;
-      default:
-        setRelationship('');
-        break;
+        }else if((str1.length+str2.length)%6 == 3){
+            setAns("Affection")
+
+        }else if((str1.length+str2.length)%6 == 4){
+            setAns("Marriage")
+
+        }else if((str1.length+str2.length)%6 == 5){
+            setAns("Enemy")
+
+        }else if((str1.length+str2.length)%6 == 0){
+            setAns("Siblings")
+
+        }
     }
-  };
+}
+      return(
+          <div id="main">
+             {/* Do not remove the main div */}
+             <input name="name1" data-testid="input1" type="text" placeholder="Enter first name" onChange={(e)=>setFirstName(e.target.value)} value={firstName}/>
 
-  const getCommonLetters = (str1, str2) => {
-    const common = [];
-    const map = {};
+             <input name="name2" data-testid="input2" type="text" placeholder="Enter second name" onChange={(e)=>setSecondName(e.target.value)} value={secondName}/>
 
-    for (let i = 0; i < str1.length; i++) {
-      const char = str1.charAt(i);
-      map[char] = (map[char] || 0) + 1;
-    }
+              <button data-testid="calculate_relationship" onClick={helperFun}>Calculate Relationship Future</button>
 
-    for (let i = 0; i < str2.length; i++) {
-      const char = str2.charAt(i);
-      if (map[char] > 0) {
-        common.push(char);
-        map[char]--;
-      }
-    }
-
-    return common;
-  };
-
-  const clearInputs = () => {
-    setName1('');
-    setName2('');
-    setRelationship('');
-  };
-
-  return (
-    <div>
-      <h1>FLAMES Game</h1>
-      <label htmlFor="name1">Name 1:</label>
-      <input
-        type="text"
-        id="name1"
-        value={name1}
-        onChange={(e) => setName1(e.target.value)}
-        data-testid="input1"
-      />
-      <br />
-      <label htmlFor="name2">Name 2:</label>
-      <input
-        type="text"
-        id="name2"
-        value={name2}
-        onChange={(e) => setName2(e.target.value)}
-        data-testid="input2"
-      />
-      <br />
-      <button onClick={calculateRelationship} data-testid="calculate_relationship">
-        Calculate Relationship Future
-      </button>
-      <button onClick={clearInputs} data-testid="clear">
-        Clear
-      </button>
-      <h3 data-testid="answer">{relationship}</h3>
-    </div>
-  );
+              <button data-testid="clear" onClick={()=> {setFirstName(""); setSecondName(""); setAns("")}}>Clear</button>
+              <div>
+                <h3 data-testid="answer">
+                    {ans}
+                </h3>
+              </div>
+          </div>
+      )
 }
 
-export default App;
+export default App
